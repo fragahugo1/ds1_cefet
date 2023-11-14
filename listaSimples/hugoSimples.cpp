@@ -60,7 +60,7 @@ int main(){
 				pos = buscar(num);
 				
 				if (pos==NULL)
-					printf("NAO achei!");
+					printf("NAO achei!\n");
 				else{
 					printf("Informe um novo numero:");
 					scanf("%d*C",&num);
@@ -75,7 +75,7 @@ int main(){
 				pos = buscar(num);
 				
 				if (pos==NULL)
-					printf("NAO achei!");
+					printf("NAO achei!\n");
 				else{
 					excluir(pos);
 				}
@@ -84,7 +84,7 @@ int main(){
 				
 			case 7:
 				if(inicio==NULL)
-					printf("Lista VAZIA!");
+					printf("Lista VAZIA!\n");
 				else{
 					excluirTudo();
 				}
@@ -108,18 +108,24 @@ int menu(){
 }
 
 int inserirIni(int numero){
-	struct No *novo; //= malloc(sizeof(No));
-	novo= new struct No;
-	novo->prox= inicio;
-	novo->num= numero;
-	inicio= novo;
+	struct No *novo = new struct No;
 	
+	if(inicio==NULL){
+		novo->prox= NULL;
+		novo->num= numero;
+		inicio= novo;	
+	}
+	else{
+		novo->prox= inicio;
+		novo->num= numero;
+		inicio= novo;
+	}
+
 	return 0;
 }
 
 int inserirFim(int numero){
-	struct No *novo;
-	novo= new struct No;
+	struct No *novo = new struct No; 
 	struct No *aux;
 	
 	if(inicio==NULL){
@@ -131,7 +137,7 @@ int inserirFim(int numero){
 		aux= inicio;
 		novo->num= numero;
 		
-		while(aux->prox)
+		while(aux->prox!=NULL)
 			aux= aux->prox;
 		
 		aux->prox= novo;
@@ -156,10 +162,9 @@ int listar(){
 }
 
 struct No * buscar(int busca){
-	struct No *aux;
-	aux= inicio;
-	
-	while(aux){
+	struct No *aux= inicio;
+
+	while(aux!=NULL){
 		if(busca==aux->num)
 			return aux;
 		
@@ -170,33 +175,28 @@ struct No * buscar(int busca){
 }
 
 int alterar(struct No *end, int outro){
-	struct No *aux;
-	
-	aux= end;
+	struct No *aux= end;
 	aux->num= outro;
 	
 	return 0;
 }
 
 int excluir(struct No *end){
-	struct No *aux;
-	struct No *del;
-	del= inicio;
-	aux= end;
+	struct No *aux= end;
+	struct No *temp= inicio;
 	
-	while(del->prox != aux)
-		del= del->prox;
+	while(temp->prox != aux)
+		temp= temp->prox;
 	
-	del->prox = aux->prox;
+	temp->prox = aux->prox;
 	delete(aux);
 	
 	return 0;
 }
 
 int excluirTudo(){
-	struct No *aux;
-	
 	while(inicio!=NULL){
+		struct No *aux;
 		aux= inicio;
 		
 		inicio= inicio->prox;

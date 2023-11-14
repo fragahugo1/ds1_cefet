@@ -70,7 +70,8 @@ int main(){
 					printf("NAO achei!");
 				else{
 					printf("Informe um novo numero:");
-					scanf("%d*C",&num);alterar(pos, num);
+					scanf("%d*C",&num);
+					alterar(pos, num);
 				}
 			
 				break;
@@ -162,20 +163,22 @@ struct No * buscar(int busca){
 		printf("Lista vazia");
 		return NULL;
 	}
-	
-		for(aux=inicio, aux2=fim; aux != aux2 && aux->ant != aux2 && aux2->prox != aux; aux=aux->prox, aux2=aux2->ant){
+	else{
+		for(; aux != aux2 && aux->ant != aux2 && aux2->prox != aux; aux=aux->prox, aux2=aux2->ant){ //condicoes: auxiliares no mesmo endereco e auxiliares se cruzando(um ou o outro)
 			if(aux->num == busca)
 				return aux;
 			else if(aux2->num == busca)
 				return aux2;
 		}
+		
 		if (aux->num == busca){
 			return aux;	
 		}
 		else{
 			printf ("Nao esta na lista");
 			return NULL;
-		}	
+		}
+	}
 }
 
 int alterar(struct No *end, int outro){
@@ -184,7 +187,7 @@ int alterar(struct No *end, int outro){
 	return 0;
 }
 
-int excluir_one(struct No *end){
+int excluir_one(struct No *end){ //Tres condicoes na dupla: se nao eh elemento unico, se nao eh o ultimo e se nao eh o primeiro! 
 	struct No *del = end;
 	
 	if(inicio==fim){
@@ -212,34 +215,33 @@ int excluir_one(struct No *end){
 }
 
 int excluir_all(){
-	struct No *aux= inicio, *aux2= fim, *temp;
+	struct No *aux= inicio, *aux2= fim;
+	struct No *temp, *temp2;
 	
 	if(inicio==NULL && fim==NULL){
 			printf("Lista VAZIA!");
 			return 1;
-	}
+	}	
+	else{
+		for(; inicio!=fim && aux->prox != fim && aux2->ant != inicio; aux= aux->prox, aux2= aux2->ant){
+			inicio= aux->prox;
+			inicio->ant= NULL;
+			
+			temp= aux; delete(temp);
+			
+			fim= aux2->ant;
+			fim->prox= NULL;
+			
+			temp2= aux2; delete(temp2);
+		}
 		
-	else	
-	for(; inicio!=fim && aux->prox != fim && aux2->ant != inicio; aux= aux->prox, aux2= aux2->ant){
-		inicio= aux->prox;
-		inicio->ant= NULL;
-		temp= aux;
-		delete(temp);
-		
-		fim= aux2->ant;
-		fim->prox= NULL;
-		temp= aux2;
-		delete(temp);
+		if (aux != NULL){
+			temp = aux;
+			inicio = NULL;
+			fim = NULL;
+			delete (temp);
+		}
 	}
-	if (aux != NULL){
-		temp = aux;
-		inicio = NULL;
-		fim = NULL;
-		delete (temp);
-	}
-	
-	delete(aux);
-	delete(aux2);
 	
 	return 0;
 }
